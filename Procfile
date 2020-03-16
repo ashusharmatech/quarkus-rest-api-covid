@@ -1,1 +1,1 @@
-web: java -jar ./target/covid-1.0.0-SNAPSHOT-runner.jar -port $PORT
+web: java -Dserver.port=$PORT -jar ./target/covid-1.0.0-SNAPSHOT-runner.jar
