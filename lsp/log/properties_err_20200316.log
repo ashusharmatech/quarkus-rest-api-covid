@@ -1,2 +1,63 @@
 Mar 16, 2020 9:38:56 PM com.redhat.quarkus.ls.QuarkusLanguageServer initialize
 INFO: Initializing Quarkus server 0.0.4-20191120-1547 with C:\Program Files\JetBrains\IntelliJ IDEA 2018.3.4\jbr
+Mar 16, 2020 10:28:11 PM com.redhat.quarkus.ls.QuarkusLanguageServer initialize
+INFO: Initializing Quarkus server 0.0.4-20191120-1547 with C:\Program Files\JetBrains\IntelliJ IDEA 2018.3.4\jbr
+Mar 16, 2020 10:28:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleNotification
+WARNING: Notification threw an exception: {
+  "jsonrpc": "2.0",
+  "method": "textDocument/didChange",
+  "params": {
+    "textDocument": {
+      "version": 2,
+      "uri": "file:///C:/Users/91855/IdeaProjects/covid/system.properties"
+    },
+    "contentChanges": [
+      {
+        "range": {
+          "start": {
+            "line": 0,
+            "character": 22
+          },
+          "end": {
+            "line": 1,
+            "character": 0
+          }
+        },
+        "rangeLength": -22,
+        "text": ""
+      }
+    ]
+  }
+}
+java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$null$0(GenericEndpoint.java:67)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.notify(GenericEndpoint.java:152)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleNotification(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:187)
+	at com.redhat.quarkus.ls.commons.ParentProcessWatcher.lambda$apply$0(ParentProcessWatcher.java:140)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:194)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:94)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:113)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint.lambda$null$0(GenericEndpoint.java:65)
+	... 12 more
+Caused by: java.lang.StringIndexOutOfBoundsException: start 22, end 0, length 24
+	at java.base/java.lang.AbstractStringBuilder.checkRangeSIOOBE(AbstractStringBuilder.java:1724)
+	at java.base/java.lang.AbstractStringBuilder.replace(AbstractStringBuilder.java:946)
+	at java.base/java.lang.StringBuilder.replace(StringBuilder.java:302)
+	at com.redhat.quarkus.ls.commons.TextDocument.update(TextDocument.java:177)
+	at com.redhat.quarkus.ls.commons.TextDocuments.onDidChangeTextDocument(TextDocuments.java:83)
+	at com.redhat.quarkus.ls.QuarkusTextDocumentService.didChange(QuarkusTextDocumentService.java:113)
+	... 17 more
+
+Mar 16, 2020 10:36:01 PM com.redhat.quarkus.ls.QuarkusLanguageServer initialize
+INFO: Initializing Quarkus server 0.0.4-20191120-1547 with C:\Program Files\JetBrains\IntelliJ IDEA 2018.3.4\jbr
