@@ -2,9 +2,49 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"></link>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script type="text/javascript">
+
+
+        $.ajax({
+
+            type: "GET",
+            url: 'http://localhost:8080/rest',
+            dataType: 'json',
+
+            success: function (obj, textstatus) {
+
+                var dataSet = new Array;
+                if (!('error' in obj)) {
+                    $.each(obj, function (index, value) {
+                        var tempArray = new Array;
+                        for (var o in value) {
+                            tempArray.push(value[o]);
+                        }
+                        dataSet.push(tempArray);
+                    })
+
+                    $('#example').DataTable({
+                        data: dataSet,
+                        columns: [
+                            {title: "state"},
+                            {title: "country"},
+                            {title: "latestTotalCases"}
+                        ]
+                    });
+                } else {
+                    alert(obj.error);
+                }
+            },
+            error: function (obj, textstatus) {
+                alert(obj.msg);
+            }
+        });
+
+
         $(function () {
             var processed_json = new Array();
             $.getJSON('/rest/country/10', function (data) {
@@ -23,9 +63,12 @@
                     chart: {
                         type: "column"
                     },
+                    xAxis: {
+                        type: 'category',
+                    },
                     yAxis: {
                         title: {
-                            text: "Scores"
+                            text: "Number of people"
                         }
                     },
                     series: [{
@@ -41,6 +84,7 @@
     Corona virus top 10 impacted countries
 </div>
 <div id="container" style="height: 400px"></div>
+<table id="example" class="display" style="width:100%">
 
 </body>
 </html>
