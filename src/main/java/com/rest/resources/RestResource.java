@@ -25,7 +25,7 @@ public class RestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
-        return ok(coronaVirusDataService.getAllStats()).build();
+        return ok(coronaVirusDataService.getAllStats()).header("Access-Control-Allow-Origin", "*").build();
     }
 
 }
