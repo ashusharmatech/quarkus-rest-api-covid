@@ -1,6 +1,7 @@
 package com.rest.resources;
 
 import com.rest.services.CoronaVirusDataService;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,20 @@ public class RestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
         return ok(coronaVirusDataService.getAllStats()).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/country")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findAllByCountry() {
+        return ok(coronaVirusDataService.getCountryStats()).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/country/{n}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findTopNByCountry(@PathParam int n) {
+        return ok(coronaVirusDataService.getTopNCountryData(n)).header("Access-Control-Allow-Origin", "*").build();
     }
 
 }
