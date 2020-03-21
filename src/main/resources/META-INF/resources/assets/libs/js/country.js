@@ -8,7 +8,7 @@ $(function () {
         dataType: "json",
         success: function (data) {
             $.each(data, function (i, obj) {
-                var div_data = "<option value=" + obj.country + ">" + obj.country + "(" + obj.latestTotalCases + ")</option>";
+                var div_data = "<option value='" + obj.country + "'>" + obj.country + "(" + obj.latestTotalCases + ")</option>";
                 $(div_data).appendTo('#input-country');
             });
             buildChart();
@@ -25,7 +25,9 @@ $(function () {
 
 
     var buildChart = function () {
-        $.getJSON('/rest/country/' + $('#input-country').val(), function (data) {
+        var country = encodeURIComponent($('#input-country').val());
+        console.log(country);
+        $.getJSON('/rest/country/' + country, function (data) {
             newdata = [];
             data.map(function (value) {
                 newdata.push([value.date, value.numberOfPeople]);
