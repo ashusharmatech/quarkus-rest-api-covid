@@ -9,18 +9,14 @@ $(function () {
     $.ajax({
         url: '/rest/country/India',
         success: function (data) {
-            $("#sparkline-india").sparkline(data.map((data) => data.numberOfPeople), {
+            $("#sparkline-india").sparkline(data.map((data) => data.confirmed), {
                 type: 'line',
                 width: '99.5%',
                 height: '100',
                 lineColor: '#5969ff',
                 fillColor: '#dbdeff',
                 lineWidth: 2,
-                spotColor: undefined,
-                minSpotColor: undefined,
-                maxSpotColor: undefined,
-                highlightSpotColor: undefined,
-                highlightLineColor: undefined,
+                tooltipFormat: 'Confirmed Cases :{{data:confirmed}}',
                 resize: true
             });
         }
@@ -31,7 +27,7 @@ $(function () {
     $.ajax({
         url: '/rest/country/China',
         success: function (data) {
-            $("#sparkline-china").sparkline(data.map((data) => data.numberOfPeople), {
+            $("#sparkline-china").sparkline(data.map((data) => data.confirmed), {
                 type: 'line',
                 width: '99.5%',
                 height: '100',
@@ -53,7 +49,7 @@ $(function () {
     $.ajax({
         url: '/rest/country/Italy',
         success: function (data) {
-            $("#sparkline-italy").sparkline(data.map((data) => data.numberOfPeople), {
+            $("#sparkline-italy").sparkline(data.map((data) => data.confirmed), {
                 type: 'line',
                 width: '99.5%',
                 height: '100',
@@ -75,7 +71,7 @@ $(function () {
     $.ajax({
         url: '/rest/country/Germany',
         success: function (data) {
-            $("#sparkline-germany").sparkline(data.map((data) => data.numberOfPeople), {
+            $("#sparkline-germany").sparkline(data.map((data) => data.confirmeds), {
                 type: 'line',
                 width: '99.5%',
                 height: '100',
@@ -118,7 +114,11 @@ $(function () {
                     columns: [
                         {title: "Country"},
                         {title: "Total Cases TIll Now"},
-                        {title: "New cases today"}
+                        {title: "New Cases Today"},
+                        {title: "Deaths"},
+                        {title: "New Deaths Today"},
+                        {title: "Recovered Cases"},
+                        {title: "New Recoveries Today"},
                     ]
                 });
             } else {

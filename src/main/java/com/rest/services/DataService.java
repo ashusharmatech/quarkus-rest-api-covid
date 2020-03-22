@@ -1,8 +1,10 @@
 package com.rest.services;
 
 
+import com.rest.enums.DataTypeEnum;
+import com.rest.models.CountryDateStats;
 import com.rest.models.CountryStats;
-import com.rest.models.DateCountryStats;
+import com.rest.models.DateStats;
 import io.quarkus.scheduler.Scheduled;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -26,13 +28,20 @@ import java.util.stream.Collectors;
 public class DataService {
 
 
-    private static String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
+    private static String CONFIRMED_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv";
+    private static String DEATH_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv";
+    private static String RECOVERED_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv";
+
 
     private final Logger log = LoggerFactory.getLogger(DataService.class);
 
-    private HashMap<String,TreeMap<Date, DateCountryStats>> countryWiseDataMap = new HashMap<>();
+    private HashMap<String,TreeMap<Date, CountryDateStats>> countryWiseDataMap = new HashMap<>();
     private HashMap<String, CountryStats> countryStatsMap = new HashMap<>();
-    private List<DateCountryStats> allData = new ArrayList<>();
+    private List<DateStats> allConfirmedData = new ArrayList<>();
+    private List<DateStats> allRecoveredData = new ArrayList<>();
+    private List<DateStats> allDeathData = new ArrayList<>();
+
+
 
 
     List<String> headerNames = new ArrayList<>();
@@ -42,26 +51,30 @@ public class DataService {
     @Scheduled(cron = "0 0 * ? * * *")
     public void initialDataLoader() throws IOException, InterruptedException, ParseException {
 
-        log.info("Calling initial data load");
-        updateCountryData();
-        updateCountrywideData();
+        loadData();
+        consolidateAllDataIntoMaps();
     }
 
-    private void updateCountryData() throws IOException, InterruptedException, ParseException {
-
-        log.info("Calling updateCountryData");
-
+    private void loadData() throws IOException, InterruptedException, ParseException {
         HashMap<String, CountryStats> tempStats = new HashMap<>();
+        loadData(CONFIRMED_DATA_URL,tempStats,DataTypeEnum.CONFIRMED);
+        loadData(RECOVERED_DATA_URL,tempStats,DataTypeEnum.RECOVERED);
+        loadData(DEATH_DATA_URL,tempStats,DataTypeEnum.DEATH);
+        this.countryStatsMap = tempStats;
+        log.info(" country stats map has "+countryStatsMap.size());
+    }
 
+
+
+    private void loadData(String url, HashMap<String, CountryStats> tempStats, DataTypeEnum dataTypeEnum) throws IOException, InterruptedException, ParseException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(VIRUS_DATA_URL))
+                .uri(URI.create(url))
                 .build();
         HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
         StringReader csvBodyReader = new StringReader(httpResponse.body());
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yy");
-
 
         for (CSVRecord record : records) {
             //log.info("CSV RECORD IS "+record.toString());
@@ -79,56 +92,147 @@ public class DataService {
             if (existingCountryStats == null) {
                 CountryStats countryStats = new CountryStats();
                 countryStats.setCountry(country);
-                countryStats.setLatestTotalCases(latestCases);
-                countryStats.setDiffFromPrevDay(latestCases - prevDayCases);
+                if(dataTypeEnum==DataTypeEnum.CONFIRMED){
+                    countryStats.setLatestConfirmedCases(latestCases);
+                    countryStats.setDiffFromPrevDayConfirmedCases(Math.max(0,latestCases - prevDayCases));
+                }
+                else if(dataTypeEnum==DataTypeEnum.RECOVERED){
+                    countryStats.setLatestRecoveredCases(latestCases);
+                    countryStats.setDiffFromPrevDayRecoveredCases(Math.max(0,latestCases - prevDayCases));
+                }
+                else{
+                    countryStats.setLatestDeathCases(latestCases);
+                    countryStats.setDiffFromPrevDayDeathCases(Math.max(0,latestCases - prevDayCases));
+                }
                 tempStats.put(country, countryStats);
             } else {
-                existingCountryStats.setLatestTotalCases(existingCountryStats.getLatestTotalCases() + latestCases);
-                existingCountryStats.setDiffFromPrevDay(existingCountryStats.getDiffFromPrevDay() + (latestCases - prevDayCases));
-            }
-            createDateStats(record,state,country,latitude,longitude);
 
+                if(dataTypeEnum==DataTypeEnum.CONFIRMED){
+                    existingCountryStats.setLatestConfirmedCases(existingCountryStats.getLatestConfirmedCases() + latestCases);
+                    existingCountryStats.setDiffFromPrevDayConfirmedCases(existingCountryStats.getDiffFromPrevDayConfirmedCases() + (latestCases - prevDayCases));
+                }
+                else if(dataTypeEnum==DataTypeEnum.RECOVERED){
+                    existingCountryStats.setLatestRecoveredCases(existingCountryStats.getLatestRecoveredCases() + latestCases);
+                    existingCountryStats.setDiffFromPrevDayRecoveredCases(existingCountryStats.getDiffFromPrevDayRecoveredCases() + (latestCases - prevDayCases));
+                }
+                else{
+                    existingCountryStats.setLatestDeathCases(existingCountryStats.getLatestDeathCases() + latestCases);
+                    existingCountryStats.setDiffFromPrevDayDeathCases(existingCountryStats.getDiffFromPrevDayDeathCases() + (latestCases - prevDayCases));
+                }
+            }
+            if(dataTypeEnum==DataTypeEnum.CONFIRMED){
+                createDateStats(record,state,country,latitude,longitude,allConfirmedData);
+            }
+            else if(dataTypeEnum==DataTypeEnum.RECOVERED){
+                createDateStats(record,state,country,latitude,longitude,allRecoveredData);
+            }
+            else{
+                createDateStats(record,state,country,latitude,longitude,allDeathData);
+            }
         }
-        this.countryStatsMap = tempStats;
-        log.info(" country stats map has "+countryStatsMap.size());
     }
 
 
-    public void createDateStats(CSVRecord record, String state, String country, String latitude, String longitude) throws ParseException {
+
+
+
+    public void createDateStats(CSVRecord record, String state, String country, String latitude, String longitude, List<DateStats> allData) throws ParseException {
         for (int i = 4; i < record.size() - 1; i++) {
             String strDate = headerNames.get(i);
             Date date = simpleDateFormat.parse(strDate);
-            allData.add(new DateCountryStats(state, country, latitude, longitude, date, Integer.parseInt(record.get(strDate))));
+            allData.add(new DateStats(state, country, latitude, longitude, date, Integer.parseInt(record.get(strDate))));
         }
     }
 
 
-    public void updateCountrywideData(){
-        for (DateCountryStats dateCountryStats : allData) {
-            TreeMap<Date, DateCountryStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateCountryStats.getCountry());
+    public void consolidateAllDataIntoMaps(){
+
+        //Confirmed Cases Load
+
+        for (DateStats dateStats : allConfirmedData) {
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
             if(dateLocationDateStatHashMap == null){
+                CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                countryDateStats.setConfirmed(dateStats.getNumberOfPeople());
                 dateLocationDateStatHashMap = new TreeMap<>();
-                dateLocationDateStatHashMap.put(dateCountryStats.getDate(), dateCountryStats);
+                dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
             }
             else{
-                DateCountryStats existingRecord = dateLocationDateStatHashMap.get(dateCountryStats.getDate());
+                CountryDateStats existingRecord = dateLocationDateStatHashMap.get(dateStats.getDate());
                 if(existingRecord==null){
-                    dateLocationDateStatHashMap.put(dateCountryStats.getDate(), dateCountryStats);
+                    CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                    countryDateStats.setConfirmed(dateStats.getNumberOfPeople());
+                    dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
                 }
                 else{
-                    DateCountryStats newLocationDataSet = new DateCountryStats(dateCountryStats.getCountry(), dateCountryStats.getState(), dateCountryStats.getLatitude(), dateCountryStats.getLongitude(), dateCountryStats.getDate(), existingRecord.getNumberOfPeople() + dateCountryStats.getNumberOfPeople());
-                    dateLocationDateStatHashMap.put(dateCountryStats.getDate(),newLocationDataSet);
+                    existingRecord.setConfirmed(existingRecord.getConfirmed()+dateStats.getNumberOfPeople());
                 }
             }
-            countryWiseDataMap.put(dateCountryStats.getCountry(),dateLocationDateStatHashMap);
+            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
         }
+
+
+
+
+        //Confirmed Cases Load
+
+        for (DateStats dateStats : allRecoveredData) {
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
+            if(dateLocationDateStatHashMap == null){
+                CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                countryDateStats.setRecovered(dateStats.getNumberOfPeople());
+                dateLocationDateStatHashMap = new TreeMap<>();
+                dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
+            }
+            else{
+                CountryDateStats existingRecord = dateLocationDateStatHashMap.get(dateStats.getDate());
+                if(existingRecord==null){
+                    CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                    countryDateStats.setRecovered(dateStats.getNumberOfPeople());
+                    dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
+                }
+                else{
+                    existingRecord.setRecovered(existingRecord.getRecovered()+dateStats.getNumberOfPeople());
+                }
+            }
+            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
+        }
+
+
+        //Confirmed Cases Load
+
+        for (DateStats dateStats : allDeathData) {
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
+            if(dateLocationDateStatHashMap == null){
+                CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                countryDateStats.setDeath(dateStats.getNumberOfPeople());
+                dateLocationDateStatHashMap = new TreeMap<>();
+                dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
+            }
+            else{
+                CountryDateStats existingRecord = dateLocationDateStatHashMap.get(dateStats.getDate());
+                if(existingRecord==null){
+                    CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
+                    countryDateStats.setDeath(dateStats.getNumberOfPeople());
+                    dateLocationDateStatHashMap.put(dateStats.getDate(), countryDateStats);
+                }
+                else{
+                    existingRecord.setDeath(existingRecord.getDeath()+dateStats.getNumberOfPeople());
+                }
+            }
+            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
+        }
+
+
     }
 
-    public Collection<DateCountryStats> getAllByCountryName(String country){
+    private CountryDateStats createCountryDateStatsFromDateStats(DateStats dateStats) {
+        return new CountryDateStats(dateStats.getState(),dateStats.getCountry(),dateStats.getLatitude(),dateStats.getLongitude(),dateStats.getDate());
+    }
+
+    public Collection<CountryDateStats> getAllByCountryName(String country){
         return countryWiseDataMap.get(country).values();
     }
-
-
 
     public HashMap<String, CountryStats> getCountryStatsMap() {
         return countryStatsMap;
@@ -136,8 +240,10 @@ public class DataService {
 
 
     public ArrayList<CountryStats> getCountriesStats() {
-        return countryStatsMap.values().stream().
+        ArrayList<CountryStats> countryStatsList = countryStatsMap.values().stream().
                 collect(Collectors.toCollection(ArrayList::new));
+        Collections.sort(countryStatsList);
+        return countryStatsList;
     }
 
     public ArrayList<String> getCountries() {

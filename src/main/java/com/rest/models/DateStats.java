@@ -2,7 +2,7 @@ package com.rest.models;
 
 import java.util.Date;
 
-public class DateCountryStats {
+public class DateStats {
     private String state;
     private String country;
     private String latitude;
@@ -10,10 +10,10 @@ public class DateCountryStats {
     private Date date;
     private int numberOfPeople;
 
-    public DateCountryStats() {
+    public DateStats() {
     }
 
-    public DateCountryStats(String state, String country, String latitude, String longitude, Date date, int numberOfPeople) {
+    public DateStats(String state, String country, String latitude, String longitude, Date date, int numberOfPeople) {
         this.state = state;
         this.country = country;
         this.latitude = latitude;

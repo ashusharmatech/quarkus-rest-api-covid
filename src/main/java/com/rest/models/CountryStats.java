@@ -1,26 +1,23 @@
 package com.rest.models;
 
-public class CountryStats {
+public class CountryStats implements Comparable<CountryStats> {
 
     private String country;
-    private int latestTotalCases;
-    private int diffFromPrevDay;
+    private int latestConfirmedCases;
+    private int diffFromPrevDayConfirmedCases;
 
-    public CountryStats() {
+    private int latestDeathCases;
+    private int diffFromPrevDayDeathCases;
+
+    private int latestRecoveredCases;
+    private int diffFromPrevDayRecoveredCases;
+
+    public int getDiffFromPrevDayConfirmedCases() {
+        return diffFromPrevDayConfirmedCases;
     }
 
-    public CountryStats(String country, int latestTotalCases, int diffFromPrevDay) {
-        this.country = country;
-        this.latestTotalCases = latestTotalCases;
-        this.diffFromPrevDay = diffFromPrevDay;
-    }
-
-    public int getDiffFromPrevDay() {
-        return diffFromPrevDay;
-    }
-
-    public void setDiffFromPrevDay(int diffFromPrevDay) {
-        this.diffFromPrevDay = diffFromPrevDay;
+    public void setDiffFromPrevDayConfirmedCases(int diffFromPrevDayConfirmedCases) {
+        this.diffFromPrevDayConfirmedCases = diffFromPrevDayConfirmedCases;
     }
 
     public String getCountry() {
@@ -31,19 +28,49 @@ public class CountryStats {
         this.country = country;
     }
 
-    public int getLatestTotalCases() {
-        return latestTotalCases;
+    public int getLatestConfirmedCases() {
+        return latestConfirmedCases;
     }
 
-    public void setLatestTotalCases(int latestTotalCases) {
-        this.latestTotalCases = latestTotalCases;
+    public void setLatestConfirmedCases(int latestConfirmedCases) {
+        this.latestConfirmedCases = latestConfirmedCases;
     }
+
+    public int getLatestDeathCases() {
+        return latestDeathCases;
+    }
+
+    public void setLatestDeathCases(int latestDeathCases) {
+        this.latestDeathCases = latestDeathCases;
+    }
+
+    public int getDiffFromPrevDayDeathCases() {
+        return diffFromPrevDayDeathCases;
+    }
+
+    public void setDiffFromPrevDayDeathCases(int diffFromPrevDayDeathCases) {
+        this.diffFromPrevDayDeathCases = diffFromPrevDayDeathCases;
+    }
+
+    public int getLatestRecoveredCases() {
+        return latestRecoveredCases;
+    }
+
+    public void setLatestRecoveredCases(int latestRecoveredCases) {
+        this.latestRecoveredCases = latestRecoveredCases;
+    }
+
+    public int getDiffFromPrevDayRecoveredCases() {
+        return diffFromPrevDayRecoveredCases;
+    }
+
+    public void setDiffFromPrevDayRecoveredCases(int diffFromPrevDayRecoveredCases) {
+        this.diffFromPrevDayRecoveredCases = diffFromPrevDayRecoveredCases;
+    }
+
 
     @Override
-    public String toString() {
-        return "LocationStats{" +
-                ", country='" + country + '\'' +
-                ", latestTotalCases=" + latestTotalCases +
-                '}';
+    public int compareTo(CountryStats o) {
+        return this.getCountry().compareTo(o.getCountry());
     }
 }
