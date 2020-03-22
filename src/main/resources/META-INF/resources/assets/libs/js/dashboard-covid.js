@@ -71,7 +71,7 @@ $(function () {
     $.ajax({
         url: '/rest/country/Germany',
         success: function (data) {
-            $("#sparkline-germany").sparkline(data.map((data) => data.confirmeds), {
+            $("#sparkline-germany").sparkline(data.map((data) => data.confirmed), {
                 type: 'line',
                 width: '99.5%',
                 height: '100',
@@ -110,6 +110,8 @@ $(function () {
                 })
 
                 $('#countryDataTable').DataTable({
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    order: [[ 1, "desc" ]],
                     data: dataSet,
                     columns: [
                         {title: "Country"},
