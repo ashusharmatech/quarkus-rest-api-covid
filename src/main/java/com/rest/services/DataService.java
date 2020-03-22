@@ -109,15 +109,15 @@ public class DataService {
 
                 if(dataTypeEnum==DataTypeEnum.CONFIRMED){
                     existingCountryStats.setLatestConfirmedCases(existingCountryStats.getLatestConfirmedCases() + latestCases);
-                    existingCountryStats.setDiffFromPrevDayConfirmedCases(existingCountryStats.getDiffFromPrevDayConfirmedCases() + (latestCases - prevDayCases));
+                    existingCountryStats.setDiffFromPrevDayConfirmedCases(existingCountryStats.getDiffFromPrevDayConfirmedCases() + Math.max(0,latestCases - prevDayCases));
                 }
                 else if(dataTypeEnum==DataTypeEnum.RECOVERED){
                     existingCountryStats.setLatestRecoveredCases(existingCountryStats.getLatestRecoveredCases() + latestCases);
-                    existingCountryStats.setDiffFromPrevDayRecoveredCases(existingCountryStats.getDiffFromPrevDayRecoveredCases() + (latestCases - prevDayCases));
+                    existingCountryStats.setDiffFromPrevDayRecoveredCases(existingCountryStats.getDiffFromPrevDayRecoveredCases() + Math.max(0,latestCases - prevDayCases));
                 }
                 else{
                     existingCountryStats.setLatestDeathCases(existingCountryStats.getLatestDeathCases() + latestCases);
-                    existingCountryStats.setDiffFromPrevDayDeathCases(existingCountryStats.getDiffFromPrevDayDeathCases() + (latestCases - prevDayCases));
+                    existingCountryStats.setDiffFromPrevDayDeathCases(existingCountryStats.getDiffFromPrevDayDeathCases() + Math.max(0,latestCases - prevDayCases));
                 }
             }
             if(dataTypeEnum==DataTypeEnum.CONFIRMED){
