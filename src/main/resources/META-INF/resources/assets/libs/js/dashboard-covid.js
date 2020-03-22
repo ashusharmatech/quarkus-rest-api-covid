@@ -9,8 +9,6 @@ $(function () {
     $.ajax({
         url: '/rest/country/India',
         success: function (data) {
-
-
             Highcharts.chart("sparkline-india", {
                 chart: {
                     backgroundColor: null,
@@ -52,7 +50,8 @@ $(function () {
                     enabled: false
                 },
                 series: [{
-                    name: 'India',
+                    lineColor: '#5969ff',
+                    fillColor: '#dbdeff',
                     data: data.map((data) => data.confirmed)
                 }]
             });
@@ -64,66 +63,164 @@ $(function () {
     $.ajax({
         url: '/rest/country/China',
         success: function (data) {
-            $("#sparkline-china").sparkline(data.map((data) => data.confirmed), {
-                type: 'line',
-                width: '99.5%',
-                height: '100',
-                lineColor: '#ff407b',
-                fillColor: '#ffdbe6',
-                lineWidth: 2,
-                spotColor: undefined,
-                minSpotColor: undefined,
-                maxSpotColor: undefined,
-                highlightSpotColor: undefined,
-                highlightLineColor: undefined,
-                resize: true
+            Highcharts.chart("sparkline-china", {
+                chart: {
+                    backgroundColor: null,
+                    borderWidth: 0,
+                    type: 'area',
+                    height: '100',
+                    style: {
+                        overflow: 'visible'
+                    },
+
+                    // small optimalization, saves 1-2 ms each sparkline
+                    skipClone: true
+
+                },
+                title: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    maxPadding: 0,
+                    minPadding: 0,
+                    gridLineWidth: 0,
+                    endOnTick: false,
+                    labels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: null
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                series: [{
+                    lineColor: '#ff407b',
+                    fillColor: '#ffdbe6',
+                    data: data.map((data) => data.confirmed)
+                }]
             });
         }
     });
 
 
     //Italy
-    $.ajax({
-        url: '/rest/country/Italy',
-        success: function (data) {
-            $("#sparkline-italy").sparkline(data.map((data) => data.confirmed), {
-                type: 'line',
-                width: '99.5%',
-                height: '100',
-                lineColor: '#25d5f2',
-                fillColor: '#dffaff',
-                lineWidth: 2,
-                spotColor: undefined,
-                minSpotColor: undefined,
-                maxSpotColor: undefined,
-                highlightSpotColor: undefined,
-                highlightLineColor: undefined,
-                resize: true
-            });
-        }
-    });
+        $.ajax({
+            url: '/rest/country/Italy',
+            success: function (data) {
+                Highcharts.chart("sparkline-italy", {
+                    chart: {
+                        backgroundColor: null,
+                        borderWidth: 0,
+                        type: 'area',
+                        height: '100',
+                        style: {
+                            overflow: 'visible'
+                        },
+
+
+                        // small optimalization, saves 1-2 ms each sparkline
+                        skipClone: true
+
+                    },
+                    title: {
+                        text: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        labels: {
+                            enabled: false
+                        }
+                    },
+                    yAxis: {
+                        maxPadding: 0,
+                        minPadding: 0,
+                        gridLineWidth: 0,
+                        endOnTick: false,
+                        labels: {
+                            enabled: false
+                        },
+                        title: {
+                            text: null
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        lineColor: '#25d5f2',
+                        fillColor: '#dffaff',
+                        data: data.map((data) => data.confirmed)
+                    }]
+                });
+            }
+        });
 
 
     //Germany
     $.ajax({
         url: '/rest/country/Germany',
         success: function (data) {
-            $("#sparkline-germany").sparkline(data.map((data) => data.confirmed), {
-                type: 'line',
-                width: '99.5%',
-                height: '100',
-                lineColor: '#fec957',
-                fillColor: '#fff2d5',
-                lineWidth: 2,
-                spotColor: undefined,
-                minSpotColor: undefined,
-                maxSpotColor: undefined,
-                highlightSpotColor: undefined,
-                highlightLineColor: undefined,
-                resize: true,
+            Highcharts.chart("sparkline-germany", {
+                chart: {
+                    backgroundColor: null,
+                    borderWidth: 0,
+                    type: 'area',
+                    height: '100',
+                    style: {
+                        overflow: 'visible'
+                    },
+
+                    // small optimalization, saves 1-2 ms each sparkline
+                    skipClone: true
+
+                },
+                title: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    maxPadding: 0,
+                    minPadding: 0,
+                    gridLineWidth: 0,
+                    endOnTick: false,
+                    labels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: null
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                series: [{
+                    lineColor: '#fec957',
+                    fillColor: '#fff2d5',
+                    data: data.map((data) => data.confirmed)
+                }]
             });
         }
     });
+
 
 
     // ==============================================================
