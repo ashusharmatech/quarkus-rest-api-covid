@@ -9,15 +9,52 @@ $(function () {
     $.ajax({
         url: '/rest/country/India',
         success: function (data) {
-            $("#sparkline-india").sparkline(data.map((data) => data.confirmed), {
-                type: 'line',
-                width: '99.5%',
-                height: '100',
-                lineColor: '#5969ff',
-                fillColor: '#dbdeff',
-                lineWidth: 2,
-                tooltipFormat: 'Confirmed Cases :{{data:confirmed}}',
-                resize: true
+
+
+            Highcharts.chart("sparkline-india", {
+                chart: {
+                    backgroundColor: null,
+                    borderWidth: 0,
+                    type: 'area',
+                    height: '100',
+                    style: {
+                        overflow: 'visible'
+                    },
+
+                    // small optimalization, saves 1-2 ms each sparkline
+                    skipClone: true
+
+                },
+                title: {
+                    text: ''
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    maxPadding: 0,
+                    minPadding: 0,
+                    gridLineWidth: 0,
+                    endOnTick: false,
+                    labels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: null
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'India',
+                    data: data.map((data) => data.confirmed)
+                }]
             });
         }
     });

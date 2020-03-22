@@ -48,7 +48,7 @@ public class DataService {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yy");
 
     @PostConstruct
-    @Scheduled(cron = "0 0 * ? * * *")
+    @Scheduled(cron = "0 0 4 ? * * *")
     public void initialDataLoader() throws IOException, InterruptedException, ParseException {
 
         loadData();
@@ -146,11 +146,12 @@ public class DataService {
 
 
     public void consolidateAllDataIntoMaps(){
+         HashMap<String,TreeMap<Date, CountryDateStats>> tempCountryWiseDataMap = new HashMap<>();
 
         //Confirmed Cases Load
 
         for (DateStats dateStats : allConfirmedData) {
-            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = tempCountryWiseDataMap.get(dateStats.getCountry());
             if(dateLocationDateStatHashMap == null){
                 CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
                 countryDateStats.setConfirmed(dateStats.getNumberOfPeople());
@@ -168,7 +169,7 @@ public class DataService {
                     existingRecord.setConfirmed(existingRecord.getConfirmed()+dateStats.getNumberOfPeople());
                 }
             }
-            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
+            tempCountryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
         }
 
 
@@ -177,7 +178,7 @@ public class DataService {
         //Confirmed Cases Load
 
         for (DateStats dateStats : allRecoveredData) {
-            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = tempCountryWiseDataMap.get(dateStats.getCountry());
             if(dateLocationDateStatHashMap == null){
                 CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
                 countryDateStats.setRecovered(dateStats.getNumberOfPeople());
@@ -195,14 +196,14 @@ public class DataService {
                     existingRecord.setRecovered(existingRecord.getRecovered()+dateStats.getNumberOfPeople());
                 }
             }
-            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
+            tempCountryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
         }
 
 
         //Confirmed Cases Load
 
         for (DateStats dateStats : allDeathData) {
-            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = countryWiseDataMap.get(dateStats.getCountry());
+            TreeMap<Date, CountryDateStats> dateLocationDateStatHashMap = tempCountryWiseDataMap.get(dateStats.getCountry());
             if(dateLocationDateStatHashMap == null){
                 CountryDateStats countryDateStats = createCountryDateStatsFromDateStats(dateStats);
                 countryDateStats.setDeath(dateStats.getNumberOfPeople());
@@ -220,9 +221,10 @@ public class DataService {
                     existingRecord.setDeath(existingRecord.getDeath()+dateStats.getNumberOfPeople());
                 }
             }
-            countryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
+            tempCountryWiseDataMap.put(dateStats.getCountry(),dateLocationDateStatHashMap);
         }
 
+        this.countryWiseDataMap = tempCountryWiseDataMap;
 
     }
 
