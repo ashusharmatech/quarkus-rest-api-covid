@@ -85,8 +85,9 @@ public class DataService {
             String state = record.get("Province/State");
             String latitude = record.get("Lat");
             String longitude = record.get("Long");
-            int latestCases = Integer.parseInt(record.get(record.size() - 1));
-            int prevDayCases = Integer.parseInt(record.get(record.size() - 2));
+            int latestCases = record.get(record.size() - 1).isBlank()?0:Integer.parseInt(record.get(record.size() - 1));
+            int prevDayCases = record.get(record.size() - 2).isBlank()?0:Integer.parseInt(record.get(record.size() - 2));
+
 
             CountryStats existingCountryStats = tempStats.get(country);
             if (existingCountryStats == null) {
