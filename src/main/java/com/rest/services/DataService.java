@@ -41,6 +41,7 @@ public class DataService {
     private List<DateStats> allRecoveredData = new ArrayList<>();
     private List<DateStats> allDeathData = new ArrayList<>();
 
+    private TreeMap<Date, CountryDateStats> overallDataStats = new TreeMap<>();
 
 
 
