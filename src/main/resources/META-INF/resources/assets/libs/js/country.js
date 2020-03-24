@@ -29,18 +29,6 @@ $(function () {
         var country = encodeURIComponent($('#input-country').val());
         console.log(country);
         $.getJSON('/rest/country/' + country, function (data) {
-            var confirmed = [];
-            var recovered = [];
-            var death = [];
-            var active = [];
-
-
-            data.map(function (value) {
-                confirmed.push([value.date, value.confirmed]);
-                recovered.push([value.date, value.recovered]);
-                death.push([value.date, value.death]);
-                active.push([value.date, value.confirmed - value.recovered - value.death]);
-            });
 
             // draw chart
             $('#complete').highcharts({
@@ -65,17 +53,18 @@ $(function () {
                 },
                 series: [{
                     name: "Confirmed Cases",
-                    data: confirmed
+                    data: data.map((data) => [data.date, data.confirmed])
                 },
                     {
                         name: "Recovered Cases",
-                        data: recovered
+                        data: data.map((data) => [data.date, data.recovered])
+
                     },
                     {
                         type: "column",
                         color: "#ff5b5d",
                         name: "Death Cases",
-                        data: death
+                        data: data.map((data) => [data.date, data.death])
                     }
                 ]
             });
@@ -104,7 +93,7 @@ $(function () {
                 },
                 series: [{
                     name: "Active",
-                    data: active
+                    data: data.map((data) => [data.date, (data.confirmed - data.recovered - data.death)])
                 }
                 ]
             });

@@ -3,121 +3,13 @@ $(function () {
 
 
     // ==============================================================
-    // Graphs of 4 countries
+    // Graphs of 4 sparklne
     // ==============================================================
-    //INDIA
-    $.ajax({
-        url: '/rest/country/India',
-        success: function (data) {
-            Highcharts.chart("sparkline-india", {
-                chart: {
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    type: 'area',
-                    height: '100',
-                    style: {
-                        overflow: 'visible'
-                    },
-
-                    // small optimalization, saves 1-2 ms each sparkline
-                    skipClone: true
-
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                xAxis: {
-                    labels: {
-                        enabled: false
-                    }
-                },
-                yAxis: {
-                    maxPadding: 0,
-                    minPadding: 0,
-                    gridLineWidth: 0,
-                    endOnTick: false,
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                series: [{
-                    lineColor: '#5969ff',
-                    fillColor: '#dbdeff',
-                    data: data.map((data) => data.confirmed)
-                }]
-            });
-        }
-    });
-
-
-    //China
-    $.ajax({
-        url: '/rest/country/China',
-        success: function (data) {
-            Highcharts.chart("sparkline-china", {
-                chart: {
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    type: 'area',
-                    height: '100',
-                    style: {
-                        overflow: 'visible'
-                    },
-
-                    // small optimalization, saves 1-2 ms each sparkline
-                    skipClone: true
-
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                xAxis: {
-                    labels: {
-                        enabled: false
-                    }
-                },
-                yAxis: {
-                    maxPadding: 0,
-                    minPadding: 0,
-                    gridLineWidth: 0,
-                    endOnTick: false,
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                series: [{
-                    lineColor: '#ff407b',
-                    fillColor: '#ffdbe6',
-                    data: data.map((data) => data.confirmed)
-                }]
-            });
-        }
-    });
-
-
-    //Italy
+    function loadSparkLine(country,lineColor,fillColor) {
         $.ajax({
-            url: '/rest/country/Italy',
+            url: '/rest/country/'+country,
             success: function (data) {
-                Highcharts.chart("sparkline-italy", {
+                Highcharts.chart("sparkline-"+country.toLowerCase(), {
                     chart: {
                         backgroundColor: null,
                         borderWidth: 0,
@@ -126,7 +18,6 @@ $(function () {
                         style: {
                             overflow: 'visible'
                         },
-
 
                         // small optimalization, saves 1-2 ms each sparkline
                         skipClone: true
@@ -139,6 +30,7 @@ $(function () {
                         enabled: false
                     },
                     xAxis: {
+                        type: 'datetime',
                         labels: {
                             enabled: false
                         }
@@ -159,67 +51,20 @@ $(function () {
                         enabled: false
                     },
                     series: [{
-                        lineColor: '#25d5f2',
-                        fillColor: '#dffaff',
-                        data: data.map((data) => data.confirmed)
+                        lineColor: lineColor,
+                        fillColor: fillColor,
+                        data: data.map((data) => [data.date, data.confirmed])
                     }]
                 });
             }
         });
+    }
 
 
-    //Germany
-    $.ajax({
-        url: '/rest/country/Germany',
-        success: function (data) {
-            Highcharts.chart("sparkline-germany", {
-                chart: {
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    type: 'area',
-                    height: '100',
-                    style: {
-                        overflow: 'visible'
-                    },
-
-                    // small optimalization, saves 1-2 ms each sparkline
-                    skipClone: true
-
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                xAxis: {
-                    labels: {
-                        enabled: false
-                    }
-                },
-                yAxis: {
-                    maxPadding: 0,
-                    minPadding: 0,
-                    gridLineWidth: 0,
-                    endOnTick: false,
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                series: [{
-                    lineColor: '#fec957',
-                    fillColor: '#fff2d5',
-                    data: data.map((data) => data.confirmed)
-                }]
-            });
-        }
-    });
+    loadSparkLine('India','#5969ff','#dbdeff');
+    loadSparkLine('China','#ff407b','#ffdbe6');
+    loadSparkLine('Italy','#25d5f2','#dffaff');
+    loadSparkLine('Germany','#fec957','#fff2d5');
 
 
 
