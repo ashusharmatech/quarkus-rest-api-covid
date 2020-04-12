@@ -53,7 +53,8 @@ $(function () {
                     series: [{
                         lineColor: lineColor,
                         fillColor: fillColor,
-                        data: data.map((data) => [data.date, data.confirmed])
+                        name: 'Active cases',
+                        data: data.map((data) => [data.date, data.confirmed - (data.recovered+data.death)])
                     }]
                 });
             }

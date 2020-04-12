@@ -148,7 +148,7 @@ $(function () {
         console.log(country);
         $.getJSON('/rest/country/' + country, function (data) {
             plotLineChart('confirmed', 'Confirmed Cases', '#58508d', data.map((data) => [data.date, data.confirmed]));
-            //plotLineChart('recovered', 'Recovered Cases','#bc5090',data.map((data) => [data.date, data.recovered]));
+            plotLineChart('recovered', 'Recovered Cases','#bc5090',data.map((data) => [data.date, data.recovered]));
             plotLineChart('death', 'Deaths', '#ff6361', data.map((data) => [data.date, data.death]));
             plotLineChart('active', 'Active Cases', '#003f5c', data.map((data) => [data.date, (data.confirmed - data.recovered - data.death)]));
         });
