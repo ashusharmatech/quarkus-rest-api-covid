@@ -12,6 +12,10 @@ public class CountryStats implements Comparable<CountryStats> {
     private int latestRecoveredCases;
     private int diffFromPrevDayRecoveredCases;
 
+    private double recoveryPercentage;
+
+    private double deathPercentage;
+
     public int getDiffFromPrevDayConfirmedCases() {
         return diffFromPrevDayConfirmedCases;
     }
@@ -68,6 +72,21 @@ public class CountryStats implements Comparable<CountryStats> {
         this.diffFromPrevDayRecoveredCases = diffFromPrevDayRecoveredCases;
     }
 
+    public double getRecoveryPercentage() {
+        return recoveryPercentage;
+    }
+
+    public void setRecoveryPercentage(double recoveryPercentage) {
+        this.recoveryPercentage = recoveryPercentage;
+    }
+
+    public double getDeathPercentage() {
+        return deathPercentage;
+    }
+
+    public void setDeathPercentage(double deathPercentage) {
+        this.deathPercentage = deathPercentage;
+    }
 
     @Override
     public int compareTo(CountryStats o) {

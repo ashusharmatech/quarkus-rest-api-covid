@@ -101,10 +101,14 @@ public class DataService {
                 else if(dataTypeEnum==DataTypeEnum.RECOVERED){
                     countryStats.setLatestRecoveredCases(latestCases);
                     countryStats.setDiffFromPrevDayRecoveredCases(Math.max(0,latestCases - prevDayCases));
+                    if(countryStats.getLatestConfirmedCases()!=0)
+                        countryStats.setRecoveryPercentage(latestCases*100/countryStats.getLatestConfirmedCases());
                 }
                 else{
                     countryStats.setLatestDeathCases(latestCases);
                     countryStats.setDiffFromPrevDayDeathCases(Math.max(0,latestCases - prevDayCases));
+                    if(countryStats.getLatestConfirmedCases()!=0)
+                        countryStats.setDeathPercentage(latestCases*100/countryStats.getLatestConfirmedCases());
                 }
                 tempStats.put(country, countryStats);
             } else {
@@ -116,10 +120,14 @@ public class DataService {
                 else if(dataTypeEnum==DataTypeEnum.RECOVERED){
                     existingCountryStats.setLatestRecoveredCases(existingCountryStats.getLatestRecoveredCases() + latestCases);
                     existingCountryStats.setDiffFromPrevDayRecoveredCases(existingCountryStats.getDiffFromPrevDayRecoveredCases() + Math.max(0,latestCases - prevDayCases));
+                    if(existingCountryStats.getLatestConfirmedCases()!=0)
+                        existingCountryStats.setRecoveryPercentage(latestCases*100/existingCountryStats.getLatestConfirmedCases());
                 }
                 else{
                     existingCountryStats.setLatestDeathCases(existingCountryStats.getLatestDeathCases() + latestCases);
                     existingCountryStats.setDiffFromPrevDayDeathCases(existingCountryStats.getDiffFromPrevDayDeathCases() + Math.max(0,latestCases - prevDayCases));
+                    if(existingCountryStats.getLatestConfirmedCases()!=0)
+                        existingCountryStats.setDeathPercentage(latestCases*100/existingCountryStats.getLatestConfirmedCases());
                 }
             }
             if(dataTypeEnum==DataTypeEnum.CONFIRMED){

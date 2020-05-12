@@ -64,7 +64,7 @@ $(function () {
 
     loadSparkLine('India','#5969ff','#dbdeff');
     loadSparkLine('China','#ff407b','#ffdbe6');
-    loadSparkLine('Italy','#25d5f2','#dffaff');
+    loadSparkLine('US','#25d5f2','#dffaff');
     loadSparkLine('Germany','#fec957','#fff2d5');
 
 
@@ -101,6 +101,8 @@ $(function () {
                         {title: "New Deaths Today"},
                         {title: "Recovered Cases"},
                         {title: "New Recoveries Today"},
+                        {title: "Recovery Percentage"},
+                        {title: "Death Percentage"},
                     ]
                 });
             } else {
