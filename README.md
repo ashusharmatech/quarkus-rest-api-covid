@@ -1,5 +1,6 @@
 # Covid Reporting
 
+[![Build Status](https://travis-ci.com/ashusharmatech/quarkus-rest-api-covid.svg?branch=master)](https://travis-ci.com/ashusharmatech/quarkus-rest-api-covid)
 ![Java CI with Maven](https://github.com/ashusharmatech/quarkus-rest-api-covid/workflows/Java%20CI%20with%20Maven/badge.svg)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
